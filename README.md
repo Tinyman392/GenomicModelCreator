@@ -95,6 +95,19 @@ The full list of options are described below:
 - -u --cluster_weight : Specify how to weight by cluster.  0 is for no weighting, 1 is by cluster size, 2 is by SIR distribution within cluster, 3 is for both.  The cluster file (-U) is also required to use this.  The default for this is "0".
 - -U --cluster_file : Specify the cluster file to be used.  It's a 2-column tab delimited file with genome_id and cluster_number in each row.  There is no default for this.
 
+## Model Output
 
+The output directory contains the X fold CV along with other info about the model.  The structure of the model directory is:
+- all : this directory only exists if the model was not trained using the (-i) option.  It contains statistic files (\*.tab files) along with the training history, predictions and true values for the testing set for each fold.  The pkl file for each model created in the X folds is also available.  These can be used to predict with.  Model parameters are also given.
+- model.attrOrder : this file specifies the order of the attributes used to generate the matrix.  
+- model.genomes.list : this file contains all the genomes used to train the model.
+- model.labels.map : this file contains a mapping from the model's output to the true label.  This is useful if the (-e) option was used to enumerate the labels. 
+- model.params : parameters passed into the buildModel.py script.
+- temp.txt : a temporary file
+- weights.list : the weight value assigned each row in the the metadata file.  
+
+## Prediction Scripts
+
+Prediction scripts predict2.py do exist, but are currently under testing and can be extremely buggy.  These will most likely be rewritten in the future.  
 
 
