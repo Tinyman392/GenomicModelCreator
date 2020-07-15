@@ -1,0 +1,50 @@
+Species	Antibiotic	S	R	I
+Klebsiella pneumoniae	Amikacin	16	64	32
+Klebsiella pneumoniae	Ampicillin	8	32	16
+Klebsiella pneumoniae	Ampicillin/Sulbactam	8	32	16			
+Klebsiella pneumoniae	Aztreonam	4	16	8
+Klebsiella pneumoniae	Cefazolin	16	32	-
+Klebsiella pneumoniae	Cefepime	2	16	4,8
+Klebsiella pneumoniae	Cefoxitin	8	32	16
+Klebsiella pneumoniae	Cefotaxime	1	4	2
+Klebsiella pneumoniae	Ceftazidime	4	16	8
+Klebsiella pneumoniae	Ceftriaxone	1	4	2
+Klebsiella pneumoniae	Cefoxitin	8	32	16
+Klebsiella pneumoniae	Cefuroxime sodium	8	32	16		
+Klebsiella pneumoniae	Ciprofloxacin	1	4	2
+Klebsiella pneumoniae	Ertapenem	0.5	2	1
+Klebsiella pneumoniae	Fosfomycin	64	256	128
+Klebsiella pneumoniae	Gentamicin	4	16	8
+Klebsiella pneumoniae	Imipenem	1	4	2
+Klebsiella pneumoniae	Levofloxacin	2	8	4
+Klebsiella pneumoniae	Meropenem	1	4	2
+Klebsiella pneumoniae	Nitrofurantoin	32	128	64
+Klebsiella pneumoniae	Piperacillin/Tazobactam	16	128	32,64
+Klebsiella pneumoniae	Tetracycline	4	16	8
+Klebsiella pneumoniae	Ticarcillin/Clavulanate	16	128	32,64
+Klebsiella pneumoniae	Tobramycin	4	16	8
+Klebsiella pneumoniae	Trimethoprim/Sulfamethoxazole	2	4	-
+Neisseria gonorrhoeae	cefixime	0.25	0.5	-	#S vs not-S
+Neisseria gonorrhoeae	cefpodoxime	0.5	1	-	#S vs not-S
+Neisseria gonorrhoeae	ceftriaxone	0.25	0.5	-	#S vs not-S (3 non-S, can't train)
+Neisseria gonorrhoeae	ciprofloxacin	0.0625	1	0.125,0.25,0.5
+Neisseria gonorrhoeae	erythromycin	-	-	-
+Neisseria gonorrhoeae	penicillin	0.0625	2	0.125,0.25,0.5,1
+Neisseria gonorrhoeae	spectinomycin	32	128	64
+Neisseria gonorrhoeae	tetracycline	0.25	2	0.5,1
+Salmonella enterica	AMC	16	64	32
+Salmonella enterica	AUG	8	32	16
+Salmonella enterica	AMP	8	32	16
+Salmonella enterica	AXO	1	4	2
+Salmonella enterica	AZI	16	32	-
+Salmonella enterica	CHL	8	32	16
+Salmonella enterica	CIP	0.0625	1	0.125,0.25,0.5
+Salmonella enterica	COT	2	4	-
+Salmonella enterica	FIS	256	512	-
+Salmonella enterica	FOX	8	32	16
+Salmonella enterica	GEN	4	16	8
+Salmonella enterica	KAN	16	64	32
+Salmonella enterica	NAL	16	32	-
+Salmonella enterica	STR	16	32	-
+Salmonella enterica	TET	4	16	8
+Salmonella enterica	TIO	2	8	4

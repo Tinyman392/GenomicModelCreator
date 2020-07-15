@@ -1,0 +1,96 @@
+Usage: buildModel.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -f DIR, --fasta_dir=DIR
+                        Directory name containing fasta files to train on.
+                        File names must be [GID].fasta where [GID] matches
+                        genome IDs found in the first column of the tabular
+                        file or public genome database
+  -t FILE, --tabular_file=FILE
+                        Tabular file to use.  For private genome models, it's
+                        3 columns: genome id, antibiotic:test_method, label.
+                        For public genomes, use the PATRIC AMR Tabular file
+                        format
+  -T DIR=., --temp_dir=DIR=.
+                        Directory name to store temporary files.  Defaults to
+                        current "directory"
+  -o DIR=model, --out_dir=DIR=model
+                        Directory name to output files to.  Defaults to
+                        "model"
+  -n INT=1, --threads=INT=1
+                        Number of threads to run.  Defaults to 1
+  -d INT=4, --depth=INT=4
+                        Specify the depth of the XGBoost model, defaults to 4
+  -k INT=10, --kmer_size=INT=10
+                        Specify the kmer size to use.  Defaults to 10
+  -K DIR, --kmc_dir=DIR
+                        Specify the outupt directory for pre-computed KMC
+                        output.  If supplied, KMC will not be run and this
+                        directory used instead.
+  -p BOOL=false, --public=BOOL=false
+                        Boolean value (true or false) to specify whether or
+                        not to use public genome data.  Defaults to "false"
+  -g GENUS, --genus=GENUS
+                        Specify the genus to train on for a public data model.
+                        Separate multiple genera with commas.
+  -s TEST_STANDARD, --test_standard=TEST_STANDARD
+                        Specify the breakpoints testing standard to accept
+                        without conversion from the public genome data.  If
+                        multiple, separate with commas.  If none supplied, all
+                        taken.
+  -b FILE, --breakpoints=FILE
+                        Specify the file containing the breakpoint calls.  It
+                        is 4 columns: taxonomy, antibiotic, S, R, I.
+  -P BOOL=false, --presence_absence=BOOL=false
+                        Specify whether or not to use presence vs absence of
+                        the kmer vs kmer counts
+  -i BOOL=false, --individual=BOOL=false
+                        Specify whether to run individual models per
+                        antibiotic
+  -F INT=0, --filter_class=INT=0
+                        Specify minimum number of genomes required in 2 bins
+                        to run antibiotic model
+  -e ENUMERATECLASSES, --enumerate_classes=ENUMERATECLASSES
+                        Specify whether or not to enumerate classes.  DO NOT
+                        ENUMERATE SIR LABELS!!!
+  -a INT=5, --folds_to_run=INT=5
+                        Specify the number of folds to run.  Must be <= total
+                        folds (-A|--total_folds; default = 10).  Defaults to
+                        5.
+  -A INT=10, --total_folds=INT=10
+                        Specify the total folds to create.  Must be >= folds
+                        to run (-a|--folds_to_run; default = 5).  Defaults to
+                        10.
+  -c BOOL=false, --classification=BOOL=false
+                        Specify whether or not to run a classification model.
+                        Defaults to false
+  -m PYTHON_HASH, --model_params=PYTHON_HASH
+                        Specify the parameters for the XGBoost model
+  -N INT=1000, --num_rounds=INT=1000
+                        Specify the number of rounds to boost
+  -C BOOL=true, --cleanup=BOOL=true
+                        Specify whether to remove large files and directories
+                        after running
+  -S LIST="", --compute_stats=LIST=""
+                        Specify which statistics to compute on the model and
+                        output.  We currently support rawAcc, w1Acc, VMEME,
+                        confMatrix, and classReport.  Combinations for AMRcls,
+                        AMRreg, and cls are supported as well.  Future support
+                        for heatmap will be added at a later date.  Separate
+                        multiple with commas.
+  -u gid|all|none=none, --shuffle=gid|all|none=none
+                        Specify whether to shuffle by genome ID (gid), nothing
+                        (all), or not shuffle (false).
+  -M XGBoost|RandomForest|ExtraTrees|Bagging=XGBoost, --model_type=XGBoost|RandomForest|ExtraTrees|Bagging=XGBoost
+                        Specify the model type to train with: XGBoost,
+                        RandomForest, ExtraTrees, or Bagging.
+  -E NUM=0.75, --max_features=NUM=0.75
+                        Specify the maximum number of features for non-XGBoost
+                        ensemble methods
+  -l NUM=0.75, --max_raw_sample=NUM=0.75
+                        Specify the number of rows to sample for non-XGBoost
+                        ensemble methods
+  -O BOOL=false, --stats_only=BOOL=false
+                        Specify whether to only run statistics on an already
+                        trained model
