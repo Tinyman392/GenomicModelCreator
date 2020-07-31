@@ -54,6 +54,8 @@ The *buildModel.py* script is used to build a model.  These options can be seen 
 
 The most used options here are the -f, -t, -T, -o, -n, -L, -k, -S, and -c options.  Hyperparamters can be tuned are mainly going to be in the -d option.  A full list of options are below (which also describe the aforementioned options).
 
+Please note that this script is still being written and some of the options may not be fully operational yet.  
+
 A couple example runs would be:
 
 ```bash
@@ -108,6 +110,21 @@ The output directory contains the X fold CV along with other info about the mode
 
 ## Prediction Scripts
 
-Prediction scripts predict2.py do exist, but are currently under testing and can be extremely buggy.  These will most likely be rewritten in the future.  
+Prediction scripts predict2.py do exist, but are currently under testing and can be extremely buggy.  These will most likely be rewritten in the future.  That said, the *predict2.py* script can be used to make predictions using an outputted model.  As of writing, these scripts only support the use of fasta-derived models (there is currently no support for alignment-based models).
+
+The simplest of runs is be shown below:
+
+```bash
+python predict2.py -f <fasta_file> -m <model_directory>
+```
+
+The script contains a few options that can be specified:
+- -f --fasta : specify the fasta file used to predict with.  This is a required option.
+- -T --temp_dir : specify the temporary directory to be used to run KMC and store libsvm files.  This value defaults to "tempDir".
+- -m --model_directory : specify the location of an output model directory that was output from the *buildModel.py* script.  This is a required option.
+- -t --threads : specify the number of threads to use.  This value defaults to 1.
+- -i --ignore_blank : specify whether or not to ignore blank values in the attribute order.  It's not recommended that you touch this option; it defaults to True.
+
+
 
 
