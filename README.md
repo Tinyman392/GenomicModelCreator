@@ -110,7 +110,7 @@ The output directory contains the X fold CV along with other info about the mode
 
 ## Prediction Scripts
 
-Prediction scripts predict2.py do exist, but are currently under testing and can be extremely buggy.  These will most likely be rewritten in the future.  That said, the *predict2.py* script can be used to make predictions using an outputted model.  As of writing, these scripts only support the use of fasta-derived models (there is currently no support for alignment-based models).
+Prediction scripts predict2.py do exist, but are currently under development.   That said, the *predict2.py* script can be used to make predictions using an outputted model.  As of writing, these scripts only support the use of fasta-derived models (there is currently no support for alignment-based models).
 
 The simplest of runs is be shown below:
 
