@@ -5,7 +5,7 @@ def moveFiles(options, gids, allFeats, antibiotic, labs, tabHsh):
 	if options.cleanup:
 		for i in tabHsh:
 			# shutil.rmtree(options.tempDir + 'kmc/')
-			if os.path.exists(options.kmcDir):
+			if os.path.exists(options.kmcDir) and '/dev/shm/' in options.kmcDir:
 				shutil.rmtree(options.kmcDir)
 			if os.path.exists(options.tempDir + i + '.libsvm'):
 				os.remove(options.tempDir + i + '.libsvm')

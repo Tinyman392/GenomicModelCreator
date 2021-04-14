@@ -2,7 +2,7 @@ import KMC
 from sys import stderr
 import os
 import xgboost as xgb
-from math import log
+from math import log, isnan
 from random import randint
 import Alignment
 
@@ -45,7 +45,33 @@ def listToLibSVMStr(lst):
 
 	return st
 
+def parseDrugDesc(fName, nKmers):
+	if fName == '':
+		return {}
+	f = open(fName)
+
+	descHsh = {}
+	for i in f:
+		i = i.strip('\n').split('\t')
+		ab1 = i[1]
+		ab2 = i[0]
+		arr = i[2].split(',')
+		descStr = ''
+
+		for j in range(0,len(arr)):
+			if 'nan' in arr[j]:
+				continue
+			descStr += ' ' + str(j+nKmers) + ':' + arr[j]
+
+		descHsh[ab1] = descStr
+		descHsh[ab2] = descStr
+
+	f.close()
+
+	return descHsh
+
 def saveLibSVM(options, tab, allFeats, fLabel='all'):
+	descHsh = parseDrugDesc(options.drugDescFile, len(allFeats))
 	if options.alignmentFile == '':
 		kmerStr = ''
 		currGID = ''
@@ -79,7 +105,13 @@ def saveLibSVM(options, tab, allFeats, fLabel='all'):
 				continue
 
 			antibiotic = i[1]
-			antibioticStr = ' ' + str(allFeats[antibiotic]) + ':1'
+			if len(descHsh) == 0:
+				antibioticStr = ' ' + str(allFeats[antibiotic]) + ':1'
+			else:
+				if antibiotic in descHsh:
+					antibioticStr = descHsh[antibiotic]
+				else:
+					continue
 			method = i[2]
 			methodStr = ' ' + str(allFeats[method]) + ':1'
 			label = str(i[3])
@@ -118,7 +150,13 @@ def saveLibSVM(options, tab, allFeats, fLabel='all'):
 				continue
 
 			antibiotic = i[1]
-			antibioticStr = ' ' + str(allFeats[antibiotic]) + ':1'
+			if len(descHsh) == 0:
+				antibioticStr = ' ' + str(allFeats[antibiotic]) + ':1'
+			else:
+				if antibiotic in descHsh:
+					antibioticStr = descHsh[antibiotic]
+				else:
+					continue
 			method = i[2]
 			methodStr = ' ' + str(allFeats[method]) + ':1'
 			label = str(i[3])

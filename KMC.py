@@ -2,6 +2,7 @@ from glob import glob
 import os
 import re
 from sys import stderr
+import Tabular
 
 def runKMC(options, gids):
 	dList = glob(options.kmcDir + '/*')
@@ -23,7 +24,8 @@ def runKMC(options, gids):
 		cmd = ' '.join(cmdArr)
 
 		os.system(cmd)
-		os.system('rm ' + str(options.kmcDir) + i + '.kmc_*')
+		os.system('rm ' + str(options.kmcDir) + i + '.kmc_pre')
+		os.system('rm ' + str(options.kmcDir) + i + '.kmc_suf')
 
 def readKMCOut(fName, options):
 	f = open(fName)
@@ -60,7 +62,14 @@ def readKMC(options):
 	return kmerHsh
 
 def mergeFastasAndRunKMC(options):
-	cmdArr = ['cat', str(options.fastaDir) + '*.fasta > ' + str(options.tempDir + 'allFasta.fasta')]
+	gids = Tabular.getGIDs(options)
+
+	cmdArr = ['cat']
+	for i in gids[:2000000]:
+		cmdArr.append(str(options.fastaDir) + i + '.fasta')
+	cmdArr.append(' > ' + str(options.tempDir + 'allFasta.fasta'))
+
+	# cmdArr = ['cat', str(options.fastaDir) + '*.fasta > ' + str(options.tempDir + 'allFasta.fasta')]
 	cmd = ' '.join(cmdArr)
 	os.system(cmd)
 
@@ -130,12 +139,16 @@ def normalizeByMarkov(kmerHsh):
 		kmerHsh[i] /= subHsh[i]
 
 def normalizeKMC(kmerHsh, options):
-	if options == 0:
+	if options.normalize == 0:
 		return
-	elif options == 1:
+	elif options.normalize == 1:
 		normalizeByTot(kmerHsh)
 		return
-	elif options == 2:
+	elif options.normalize == 2:
 		normalizeByMarkov(kmerHsh)
+		return
+	else:
+		stderr.write("Invalid -r | --normalize_kmer option.  Valid values { 0 1 2 }.\n")
+		exit(1)
 
 

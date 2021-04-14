@@ -13,9 +13,10 @@ def convLabel(s):
 			continue
 
 	if lab == 0:
-		return s
+		return None
 
 	lab = log(lab, 2)
+	lab = round(lab,0)
 
 	if '>' in s and '=' not in s:
 		lab += 1
@@ -66,6 +67,8 @@ def loadTab(options):
 			i[-1] = i[-1].split('/')[0].split(' ')[0]
 			if options.twoFold:
 				i[-1] = convLabel(i[-1])
+				if i[-1] is None:
+					continue
 
 		if options.noI:
 			if i[-1] == '1'or i[-1] == 1:
@@ -76,7 +79,7 @@ def loadTab(options):
 			if i[-1] == 1:
 				i[-1] = 2
 
-		tab.append([i[0], i[1][0], i[1][1], i[2]])
+		tab.append([i[0], i[1][0], i[1][1], i[-1]])
 
 	f.close()
 
@@ -117,7 +120,6 @@ def loadTab(options):
 		for i in sorted(labs):
 			labs[i] = count
 			count += 1
-
 	else:
 		for i in sorted(labs):
 			if options.classify:
@@ -191,3 +193,13 @@ def splitByAntibiotic(tab, options):
 		tabHsh['all'] = tab
 
 	return tabHsh
+
+def getGIDs(options):
+	tab, gids, labs = loadTab(options)
+	gids = {}
+	for i in tab:
+		# print i
+		if i[0] not in gids:
+			gids[i[0]] = 0
+
+	return list(gids)

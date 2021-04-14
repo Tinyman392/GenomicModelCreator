@@ -83,7 +83,7 @@ def getOptions():
 	parser.add_option('-n', '--threads', help="Number of threads to run.  Defaults to 1", metavar='INT=1', type=int, default=1, dest='threads')
 	parser.add_option('-d', '--depth', help="Specify the depth of the XGBoost model, defaults to 4", metavar='INT=4', type=int, default=4, dest='depth')
 	parser.add_option('-k', '--kmer_size', help="Specify the kmer size to use.  Defaults to 10", metavar='INT=10', type=int, default=10, dest='kmerSize')
-	parser.add_option('-K', '--kmc_dir', help='Specify the outupt directory for pre-computed KMC output.  If supplied, KMC will not be run and this directory used instead.', metavar='DIR', default='', dest='kmcDir')
+	parser.add_option('-K', '--kmc_dir', help='Specify the outupt directory for pre-computed KMC output.  If supplied, KMC will not be run and this directory used instead.', metavar='DIR', default='', dest='kmcDir') 
 	parser.add_option('-p', '--public', help='Boolean value (true or false) to specify whether or not to use public genome data.  Defaults to "false"', metavar='BOOL=false', default='false', dest='public')
 	parser.add_option('-g', '--genus', help='Specify the genus to train on for a public data model.  Separate multiple genera with commas.', metavar='GENUS', default='', dest='genus')
 	parser.add_option('-s', '--test_standard', help='Specify the breakpoints testing standard to accept without conversion from the public genome data.  If multiple, separate with commas.  If none supplied, all taken.', metavar='TEST_STANDARD', default='', dest='testStandard')
@@ -116,6 +116,7 @@ def getOptions():
 	parser.add_option('-u', '--cluster_weight', help = 'Weight each sample by weighting specified in a cluster.  0 = no cluster weight, 1 = weight by size, 2 = weight by SIR cluster dist, 3 = weight by both', metavar='INT=0', default=0, type=int, dest='clustWeight')
 	parser.add_option('-U', '--cluster_file', help = 'File to use with cluster weighting (-u|--cluster_weight) option', metavar='FILE=""', default='', dest = 'clustFile')
 	parser.add_option('-W', '--two_fold', help = '2 Fold dilution factor values?', metavar = 'BOOL="TRUE"', default = 'True', dest = 'twoFold')
+	parser.add_option('-D', '--drug_descriptors', help = 'Drug descriptor values file', metavar = 'FILE=""', default = '', dest = 'drugDescFile')
 
 	# parser.add_option('-e', '--cache_kmc', help='Specify whether or not to cache the KMC data for all the genomes in memory between antibiotics', metavar='BOOL=false', default='false', dest='cacheKMC')
 
