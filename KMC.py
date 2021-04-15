@@ -95,8 +95,6 @@ def mergeFastasAndRunKMC(options):
 	cmd = ' '.join(cmdArr)
 	os.system(cmd)
 
-	exit(1)
-
 	cmdArr = ['rm', options.tempDir + 'allFasta.fasta']
 	cmd = ' '.join(cmdArr)
 	os.system(cmd)
