@@ -4,6 +4,9 @@ import re
 from sys import stderr
 import Tabular
 
+def err(s):
+	stderr.write(s)
+
 def runKMC(options, gids):
 	dList = glob(options.kmcDir + '/*')
 	for i in dList:
@@ -64,14 +67,26 @@ def readKMC(options):
 def mergeFastasAndRunKMC(options):
 	gids = Tabular.getGIDs(options)
 
-	cmdArr = ['cat']
-	for i in gids[:2000000]:
-		cmdArr.append(str(options.fastaDir) + i + '.fasta')
-	cmdArr.append(' > ' + str(options.tempDir + 'allFasta.fasta'))
+	cmd = '>' + str(options.tempDir + 'allFasta.fasta')
+	err("merging all KMC...\n\t")
+	cnt = 0
+	inc = len(gids) / 50.
+	for i in gids:
+		if cnt >= inc:
+			err('=')
+			cnt = 0
+		cnt += 1
+
+		if os.path.isfile(str(options.fastaDir) + i + '.fasta'):
+			# cmdArr.append(str(options.fastaDir) + i + '.fasta')
+			cmdArr = ['cat', str(options.fastaDir) + i + '.fasta', '>> ' + str(options.tempDir + 'allFasta.fasta')]
+			cmd = ' '.join(cmdArr)
+			os.system(cmd)
+	err('\n')
 
 	# cmdArr = ['cat', str(options.fastaDir) + '*.fasta > ' + str(options.tempDir + 'allFasta.fasta')]
-	cmd = ' '.join(cmdArr)
-	os.system(cmd)
+	# cmd = ' '.join(cmdArr)
+	# os.system(cmd)
 
 	if not options.pairedEnd:
 		cmdArr = ['kmc.sh', str(options.kmerSize), options.tempDir + 'allFasta.fasta', options.tempDir + 'allFasta.fasta', options.tempDir]
@@ -79,6 +94,8 @@ def mergeFastasAndRunKMC(options):
 		cmdArr = ['kmc.sh', str(options.kmerSize), '@' + options.tempDir + 'allFasta.fasta', options.tempDir + 'allFasta.fasta', options.tempDir]
 	cmd = ' '.join(cmdArr)
 	os.system(cmd)
+
+	exit(1)
 
 	cmdArr = ['rm', options.tempDir + 'allFasta.fasta']
 	cmd = ' '.join(cmdArr)
