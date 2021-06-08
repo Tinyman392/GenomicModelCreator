@@ -16,7 +16,15 @@ def runKMC(options, gids):
 	for i in gids:
 		fList.append(i + '.fasta')
 
+	err("Running KMC...\n\t")
+	cnt = 0
+	inc = len(fList) / 50.
 	for i in fList:
+		if cnt >= inc:
+			err('=')
+			cnt = 0
+		cnt += 1
+
 		fName = options.fastaDir + i
 
 		cmdArr = []
@@ -29,6 +37,7 @@ def runKMC(options, gids):
 		os.system(cmd)
 		os.system('rm ' + str(options.kmcDir) + i + '.kmc_pre')
 		os.system('rm ' + str(options.kmcDir) + i + '.kmc_suf')
+	err("\n")
 
 def readKMCOut(fName, options):
 	f = open(fName)
