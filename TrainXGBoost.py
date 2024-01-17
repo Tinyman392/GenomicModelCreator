@@ -57,6 +57,10 @@ def train(options, tab, labs, libsvm, antibiotic):
 		params['max_depth'] = options.depth
 	if 'nthread' not in params:
 		params['nthread'] = options.threads
+	if options.row_sample != 1:
+		params['subsample'] = options.row_sample
+	if options.max_features != 1:
+		params['colsample_bytree'] = options.max_features
 
 	if options.classify:
 		try:

@@ -46,7 +46,7 @@ def loadTab(options):
 	for i in f:
 		i = i.strip().split('\t')
 
-		if options.alignmentFile == '' and not os.path.exists(options.fastaDir + i[0] + '.fasta'):
+		if options.alignmentFile == '' and options.tabFeat == '' and not os.path.exists(options.fastaDir + i[0] + '.fasta'):
 			stderr.write(i[0] + '\n')
 			continue
 
@@ -68,6 +68,7 @@ def loadTab(options):
 			if options.twoFold:
 				i[-1] = convLabel(i[-1])
 				if i[-1] is None:
+					print i
 					continue
 
 		if options.noI:

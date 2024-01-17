@@ -5,6 +5,7 @@ import xgboost as xgb
 from math import log, isnan
 from random import randint
 import Alignment
+import TabFeat
 
 def toMIC(micStr):
 	mic = 0
@@ -72,7 +73,7 @@ def parseDrugDesc(fName, nKmers):
 
 def saveLibSVM(options, tab, allFeats, fLabel='all'):
 	descHsh = parseDrugDesc(options.drugDescFile, len(allFeats))
-	if options.alignmentFile == '':
+	if options.alignmentFile == '' and options.tabFeat == '':
 		kmerStr = ''
 		currGID = ''
 
@@ -125,9 +126,68 @@ def saveLibSVM(options, tab, allFeats, fLabel='all'):
 
 		fLSVM.close()
 		fTrue.close()
+	elif options.alignmentFile == '':
+		stderr.write("Parsing tabular features\n")
+		tabFeatHsh = TabFeat.parseFeats(options)
+
+		stderr.write('Converting Array to LibSVM Format...\n\t')
+		count = 0
+		inc = len(tabFeatHsh) / 50
+		for i in tabFeatHsh:
+			if count > inc:
+				stderr.write('=')
+				count = 0
+			count += 1
+
+			tabFeatHsh[i] = listToLibSVMStr(tabFeatHsh[i])
+		stderr.write('\n')
+
+		fLSVM = open(options.tempDir + fLabel + '.libsvm', 'w')
+		fTrue = open(options.tempDir + fLabel + '.true', 'w')
+
+		stderr.write("Writing LibSVM...\n\t")
+		count = 0
+		inc = len(tab) / 50
+		for i in tab:
+			if count > inc:
+				stderr.write('=')
+				count = 0
+			count += 1
+
+			gid = i[0]
+
+			if gid not in tabFeatHsh:
+				continue
+
+			antibiotic = i[1]
+
+			if len(descHsh) == 0:
+				antibioticStr = ' ' + str(allFeats[antibiotic]) + ':1'
+			else:
+				if antibiotic in descHsh:
+					antibioticStr = descHsh[antibiotic]
+				else:
+					continue
+
+			method = i[2]
+			methodStr = ' ' + str(allFeats[method]) + ':1'
+
+			label = str(i[3])
+
+			feat = tabFeatHsh[gid]
+
+			lsvmStr = label + feat + antibioticStr + methodStr + '\n'
+			trueStr = i[0] + '\t' + i[1] + '\t' + i[2] + '\t' + str(i[3]) + '\n'
+
+			fLSVM.write(lsvmStr)
+			fTrue.write(trueStr)
+		stderr.write('\n')
+
+		fLSVM.close()
+		fTrue.close()
 	else:
 		print "Getting alignments"
-		alignmentHsh = Alignment.parseAlignmentFile(options)
+		alignmentHsh = Alignment.parseFeats(options)
 		for i in alignmentHsh:
 			alignmentHsh[i] = listToLibSVMStr(alignmentHsh[i])
 

@@ -11,6 +11,7 @@ import os
 import KMC
 import Tabular
 import PATRICPublicTabular
+import TabFeat
 import xgboost as xgb
 import shutil
 import Matrix
@@ -104,7 +105,7 @@ def getOptions():
 	# parser.add_option('-u', '--shuffle', help='Specify whether to shuffle by genome ID (gid), nothing (all), or not shuffle (false).', metavar='gid|all|none=none', default='none', dest='shuffle')
 	parser.add_option('-M', '--model_type', help="Specify the model type to train with: XGBoost, RandomForest, ExtraTrees, Bagging, or SVM.", metavar="XGBoost|RandomForest|ExtraTrees|Bagging|SVM=XGBoost", default="XGBoost", dest="modelType")
 	parser.add_option('-E', '--max_features', help='Specify the maximum number of features for non-XGBoost ensemble methods', metavar='NUM=0.75', default=0.75, type=float, dest='max_features')
-	parser.add_option('-l', '--max_raw_sample', help='Specify the number of rows to sample for non-XGBoost ensemble methods', metavar='NUM=0.75', default=0.75, type=float, dest='row_sample')
+	parser.add_option('-l', '--max_row_sample', help='Specify the number of rows to sample for non-XGBoost ensemble methods', metavar='NUM=0.75', default=0.75, type=float, dest='row_sample')
 	parser.add_option('-O', '--stats_only', help='Specify whether to only run statistics on an already trained model', metavar='BOOL=false', default='false', dest='statsOnly')
 	parser.add_option('-q', '--paired_end', help='Specify whether to use paired end reads as input.  Fasta file input should be a file containing a list of paired end read files for each genome.', metavar='BOOL=false', default='false', dest='pairedEnd')
 	parser.add_option('-w', '--weighted', help='Specify whether to weight each sample by class distribution', metavar='BOOL=false', default='false', dest='weight')
@@ -117,6 +118,9 @@ def getOptions():
 	parser.add_option('-U', '--cluster_file', help = 'File to use with cluster weighting (-u|--cluster_weight) option', metavar='FILE=""', default='', dest = 'clustFile')
 	parser.add_option('-W', '--two_fold', help = '2 Fold dilution factor values?', metavar = 'BOOL="TRUE"', default = 'True', dest = 'twoFold')
 	parser.add_option('-D', '--drug_descriptors', help = 'Drug descriptor values file', metavar = 'FILE=""', default = '', dest = 'drugDescFile')
+	parser.add_option('-Z', '--filterFeatures', help = 'Filter features, used for presence/absence features to reduce feature space for faster training.  Three options exist for this, "none", "fast", and "slow".  The "fast" option is fast, but will remove k-mers that exist 2+ times (on average) within the genome set, slow is more accurate to filter k-mers that exist in very few or many genomes.  Must be paired with the -z|--filterFeaturesLim option if used.', metavar = 'STR="none"', default = 'none', dest = 'filtFeats')
+	parser.add_option('-z', '--filterFeaturesLim', help = 'Used in conjunction with the -Z|--filterFeatures option.  Sets the limit for filtering features.  This filter is symmetric, so if 0.1 is selected, features that appear in < 0.1 genomes and > 0.9 genomes will be discarded prior to training.', metavar = 'FLOAT=0.1', default=0.1, type=float, dest = 'filtFeatsLim')
+	parser.add_option('-B', '--tabFeatures', help = 'Use tabular defined features.  First column is genome ID followed by numerical tabular features; everything is tab delimated.', metavar = "FILE=''", default="", type=str, dest = 'tabFeat')
 
 	# parser.add_option('-e', '--cache_kmc', help='Specify whether or not to cache the KMC data for all the genomes in memory between antibiotics', metavar='BOOL=false', default='false', dest='cacheKMC')
 
@@ -143,8 +147,8 @@ def checkOptions(options, parser):
 	flag = False
 
 	if options.public:
-		if options.fastaDir == '' and options.alignmentFile == '':
-			print "fasta directory (-f|--fasta_dir) or alignment file (-L|--alignment) required"
+		if options.fastaDir == '' and options.alignmentFile == '' and options.tabFeat == '':
+			print "fasta directory (-f|--fasta_dir) or alignment file (-L|--alignment) or tab feature file (-B|--tabFeatures) required"
 			flag = False
 		if options.tabFile == '':
 			print "tabular file (-t|--tabular_file) required"
@@ -224,6 +228,8 @@ if not options.statsOnly:
 	allFeats = {}
 	if options.alignmentFile != '':
 		allFeats = Alignment.getAllFeats(options)
+	if options.tabFeat != '':
+		allFeats = TabFeat.getAllFeats(options)
 	else:
 		if options.kmcDir == '':
 			options.kmcDir = options.tempDir + 'kmc/'
